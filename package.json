@@ -1,0 +1,25 @@
+{
+  "name": "cs361-group16-true-random-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Anapsys/cs361-group16-true-random-service.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Anapsys/cs361-group16-true-random-service/issues"
+  },
+  "homepage": "https://github.com/Anapsys/cs361-group16-true-random-service#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "express-handlebars": "^8.0.2",
+    "handlebars": "^4.7.8"
+  }
+}
