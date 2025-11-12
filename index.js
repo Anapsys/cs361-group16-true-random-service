@@ -42,6 +42,15 @@ app.get('/', async (req, res) => {
 
     })
 })
+app.get('/rand', async (req, res) => {
+    // dummy route for dev branch
+    // in console: type npm run start
+    // in browser: http://localhost:3002/rand
+    const num = Math.random();
+    const result = {"Number": num}
+    console.log(result);
+    res.send(result);
+})
 
 //
 app.listen(port, function () {
