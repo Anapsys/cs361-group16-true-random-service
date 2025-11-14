@@ -6,3 +6,15 @@ Communication contract:
 
 UML:
 ![./static/UMl.png](./static/UMl.png)
+
+# Communication Contract
+
+### Requesting Data
+
+#### Example Request
+
+### Recieving Data
+
+#### Example Recieve
+
+### UML Sequence Diagram
