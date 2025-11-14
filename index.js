@@ -13,6 +13,11 @@ const { redirect } = require('next/dist/server/api-utils');
 
 var app = express()
 var port = process.env.PORT || 3002
+const { PythonShell } = require('python-shell');
+const pythonOptions = {
+    mode: 'text',
+    args: []
+}
 
 //
 // middleware
@@ -36,11 +41,27 @@ app.use(express.urlencoded({ extended: true }));
 // index
 // NOTE: this route uses ASYNC syntax to allow it to wait
 app.get('/', async (req, res) => {
-    // debug 
-    
-    res.render('index', {
-
-    })
+    let theNumber = 'undefined';
+    try {
+        console.log("TRYING")
+        await PythonShell.run('random_number_generator.py', pythonOptions, function(err, results) {
+            if (err) throw err;
+            res.send(results)
+            console.log(results)
+        })
+        .then(messages=>{
+            theNumber = messages[messages.length - 1]
+            console.log(theNumber)
+            lineArray = theNumber.split('\n');
+            lastLine = lineArray[lineArray.length - 1]
+            console.log(lastLine)
+            console.log("Finished")
+            res.send({'number': lastLine});
+        })
+    }
+    catch {
+        console.error("wtf")
+    }
 })
 
 //
