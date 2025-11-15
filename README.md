@@ -1,6 +1,6 @@
 # Communication Contract
-## True Random number generator service
-This algorithm picks a random pixel is from a jellyfish tank livestream on YouTube and then chooses one of its three
+## True Random Number Generator Service
+This algorithm picks a random pixel from a jellyfish tank livestream on YouTube and then chooses one of its three
 color values (RGB) to generate a random number.
 
 #### Install Node Packages
@@ -21,18 +21,18 @@ Start the server with the following command:
 ### Example Request:
 **While running the server...**
 
-Use cURL to make a request directly from the terminal:
+Use cURL to make a request directly in the terminal:
 
     curl http://localhost:3002/
 
-Expected termina response (the number will be random):
+Expected response (the number will be random):
 
     {"number":"13"}
 
 ## Recieving Data
-The server executes a Python script (random_number_generator.py):
+Upon running, The server executes a Python script (random_number_generator.py):
 
-1. Extracts a still frame from a Jellyfish tank livestream.
+1. Extracts a still frame from a jellyfish tank livestream.
 2. Picks a random pixel.
 3. Selects a random RGB value from the chosen pixel.
 4. Returns it as an integer in JSON format.
@@ -54,5 +54,4 @@ If the livestream is offline, the server will respond to the client with: `"Live
 
 ## UML Sequence Diagram
 
-UML:
-![./static/UMl.png](./static/UMl.png)
+![UML Sequence Diagram of the True Random Number Generator](uml_rng.png)
