@@ -9,9 +9,7 @@ Install `node.js` dependencies in the project directory.
     - npm install
 
 ## Requesting Data
-Clients can request a random generated number by sending an HTTP GET requests to the server on `port 3002`
-
-    - http://localhost:3002/
+Clients can request a random generated number by sending an HTTP requests to the server on `port 3002`
 
 ### Run Server
 Start the server with the following command:
@@ -19,18 +17,18 @@ Start the server with the following command:
     - npm start
 
 ### Example Request:
-**While running the server...**
+**While the server is running...**
 
-Use cURL to make a request directly in the terminal:
+###### Use cURL to make a request directly in the terminal:
 
     curl http://localhost:3002/
 
-Expected response (the number will be random):
+###### On a web browser, go to: http://localhost:3002/
 
-    {"number":"13"}
+    http://localhost:3002/
 
 ## Recieving Data
-Upon running, The server executes a Python script (random_number_generator.py):
+Upon running, the server executes a Python script (random_number_generator.py):
 
 1. Extracts a still frame from a jellyfish tank livestream.
 2. Picks a random pixel.
@@ -39,7 +37,7 @@ Upon running, The server executes a Python script (random_number_generator.py):
 
 ### Example Recieve:
 
-###### On a web browser, go to: http://localhost:3002/:
+###### Expected response (the number will be random):
 
      {"number":"46"}
      
