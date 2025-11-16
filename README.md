@@ -9,7 +9,7 @@ Install `node.js` dependencies in the project directory.
     - npm install
 
 ## Requesting Data
-Clients can request a random generated number by sending an HTTP requests to the server on `port 3002`
+Clients can request a random generated number by sending HTTP requests to the server on `port 3002`
 
 ### Run Server
 Start the server with the following command:
