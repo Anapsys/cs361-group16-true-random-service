@@ -1,29 +1,21 @@
 //
 // definitions
 //
-
-var path = require('path');
-const fs = require('fs');
-let http = require('http');
 var express = require('express');
-// add express-handlebars to use handlebars with express view engine
 var exphbs = require('express-handlebars');
-const { setTimeout } = require('timers');
-const { redirect } = require('next/dist/server/api-utils');
-
-var app = express()
-var port = process.env.PORT || 3002
 const { PythonShell } = require('python-shell');
+
+var app = express();
+var port = process.env.PORT || 3002;
+
 const pythonOptions = {
     mode: 'text',
     args: []
-}
+};
 
 //
 // middleware
 //
-
-// set express app to use express-handlebars on res.render() call
 app.engine('handlebars', exphbs.engine({
     defaultLayout: null
 }))
@@ -38,33 +30,41 @@ app.use(express.urlencoded({ extended: true }));
 // route service
 //
 
-// index
+// Route to get a random number from (random_number_generator.py)
 // NOTE: this route uses ASYNC syntax to allow it to wait
 app.get('/', async (req, res) => {
+
     let theNumber = 'undefined';
+
     try {
-        console.log("TRYING")
-        await PythonShell.run('random_number_generator.py', pythonOptions, function(err, results) {
+        console.log("Acquiring pixel...");
+
+        await PythonShell.run('random_number_generator.py', pythonOptions, function(err) {
             if (err) throw err;
-            res.send(results)
-            console.log(results)
         })
         .then(messages=>{
-            theNumber = messages[messages.length - 1]
-            console.log(theNumber)
-            lineArray = theNumber.split('\n');
-            lastLine = lineArray[lineArray.length - 1]
-            console.log(lastLine)
-            console.log("Finished")
-            res.send({'number': lastLine});
-        })
-    }
-    catch {
-        console.error("wtf")
-    }
-})
 
-//
+            // Capture the last line from the script
+            theNumber = messages[messages.length - 1];
+            console.log(theNumber);
+
+            let lineArray = theNumber.split('\n');
+            let lastLine = lineArray[lineArray.length - 1];
+
+            console.log("Finished");
+            res.send({'number': lastLine});
+        });
+
+    } catch (err) {
+
+        // Handle error
+        console.error("Python execution failed:", err);
+        res.status(500).json({error: "Failed to acquire pixel from random_number_generator.py"})
+    }
+
+});
+
+// Start server on the port
 app.listen(port, function () {
     console.log("== Server is listening on port", port)
-})
+});

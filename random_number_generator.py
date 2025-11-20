@@ -1,60 +1,69 @@
 import yt_dlp
 import cv2
 import numpy as np
-from fastapi import FastAPI, HTTPException
 
-app = FastAPI()
 
-URL = "https://www.youtube.com/watch?v=1rvCfsW_qTA"
+# -----------------YouTube livestream URLs------------------ #
+# Uses the Jellyfish Tank URL first; others are backups
+
+URLs = [
+    # Jellyfish Tank
+    "https://www.youtube.com/watch?v=1rvCfsW_qTA",
+
+    # Tropical Reef Aquarium
+    "https://www.youtube.com/watch?v=DHUnz4dyb54",
+
+    # Polar Bear Tundra
+    "https://www.youtube.com/watch?v=kvJnsuyE0cs"
+]
+
+
+# yt-dlp set options
+options = {
+    "quiet": True,
+    "no_warnings": True,
+    "logger": None
+}
 
 
 def get_ran_px():
+    """
+    Capture a single frame from a livestream and
+    return a random pixel's RGB value
 
-    # extracts livestream URL and metadata without downloading
-    with yt_dlp.YoutubeDL({}) as ydl:
-        info = ydl.extract_info(URL, download=False)
-        stream_url = info['url']
+    Returns:
+        int: Random pixel RGB value
+        None: if the capture failed
+    """
 
-        if not info.get('is_live', False):
-            raise HTTPException(status_code=400, detail="Livestream currently offline")
+    for url in URLs:
 
+        # Extracts livestream URL and metadata without downloading
+        with yt_dlp.YoutubeDL(options) as ydl:
+            info = ydl.extract_info(url, download=False)
+            if info.get('is_live', False):
+                stream_url = info['url']
+                break
+    else:
+        print("Livestreams are offline")
+        return
+
+    # Capture Frame
     capture_video = cv2.VideoCapture(stream_url)
-
-    # ret = True, False (status of the capture)
-    # frame = store the 3D array
     ret, frame = capture_video.read()
     capture_video.release()
 
-    if ret:
-
-        # prints the whole array (BGR values)
-        # print("Full Frame: ")
-        # print(frame)
-
-        # dimensions of the frame:
-        # (Height, Width, num of BGR values per row)
-        # print("Frame Dimensions: ")
-        # print(frame.shape)
-        pass
-
     if not ret:
-        raise HTTPException(status_code=404, detail="Livestream data not found")
+        print("Capture Frame Failed")
+        return
 
-    # height, width, px BGR value indices
+    # Get a random pixel's RGB value
     h, w, px = frame.shape
-
-    # get random pixel
-    h_px = np.random.randint(0, h)
-    w_px = np.random.randint(0, w)
-    c_px = np.random.randint(0, px)
-
-    # random pixel from a single still frame of the livestream
-    pixel_value = int(frame[h_px, w_px, c_px])
-
-    # print("Random Pixel Indices", h_px, w_px, c_px)
-    # print("Random Pixel [BGR Values]", frame[h_px, w_px])
+    pixel_value = int(frame[np.random.randint(0, h), np.random.randint(0, w),
+                            np.random.randint(0, px)])
     print(pixel_value)
     return pixel_value
 
 
-get_ran_px()
+if __name__ == "__main__":
+    get_ran_px()
