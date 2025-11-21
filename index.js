@@ -14,14 +14,12 @@ const pythonOptions = {
 };
 
 //
-// middleware
+// middleware and base configuration
 //
 app.engine('handlebars', exphbs.engine({
     defaultLayout: null
 }))
 app.set('view engine', 'handlebars')
-
-// static, json, urlencoded
 app.use(express.static('static'))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,40 +29,30 @@ app.use(express.urlencoded({ extended: true }));
 //
 
 // Route to get a random number from (random_number_generator.py)
-// NOTE: this route uses ASYNC syntax to allow it to wait
 app.get('/', async (req, res) => {
-
-    let theNumber = 'undefined';
+    let resultNumber = 'undefined';
 
     try {
-        console.log("Acquiring pixel...");
-
         await PythonShell.run('random_number_generator.py', pythonOptions, function(err) {
             if (err) throw err;
         })
         .then(messages=>{
-
             // Capture the last line from the script
-            theNumber = messages[messages.length - 1];
-            console.log(theNumber);
-
-            let lineArray = theNumber.split('\n');
+            let scriptOutput = messages[messages.length - 1];
+            console.log(scriptOutput);
+            let lineArray = scriptOutput.split('\n');
             let lastLine = lineArray[lineArray.length - 1];
-
-            console.log("Finished");
+            resultNumber = lastLine;
             res.send({'number': lastLine});
         });
 
     } catch (err) {
-
-        // Handle error
         console.error("Python execution failed:", err);
         res.status(500).json({error: "Failed to acquire pixel from random_number_generator.py"})
     }
 
 });
 
-// Start server on the port
 app.listen(port, function () {
     console.log("== Server is listening on port", port)
 });

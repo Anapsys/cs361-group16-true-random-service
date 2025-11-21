@@ -39,7 +39,8 @@ Upon running, the server executes a Python script (random_number_generator.py):
 
 ###### Expected response (the number will be random):
 
-     {"number":"46"}
+    A JSON object containing one integer "number": 
+    {"number":"46"}
      
 ###### On the terminal, stdout will show the server output when running:
       == Server is listening on port 3002

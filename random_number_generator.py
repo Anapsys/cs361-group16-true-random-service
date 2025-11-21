@@ -26,7 +26,34 @@ options = {
 }
 
 
-def get_ran_px():
+def get_valid_stream():
+    for url in URLs:
+        # Extracts livestream URL and metadata without downloading
+        with yt_dlp.YoutubeDL(options) as ydl:
+            info = ydl.extract_info(url, download=False)
+            if info.get('is_live', False):
+                return info['url']
+                break
+    else:
+        print("Livestreams are offline")
+        return
+    
+
+def get_single_frame():
+    # Capture Frame
+    stream_url = get_valid_stream()
+    capture_video = cv2.VideoCapture(stream_url)
+    ret, frame = capture_video.read()
+    capture_video.release()
+
+    if not ret:
+        print("Capture Frame Failed")
+        return -1
+    else:
+        return frame
+
+
+def get_rand_px():
     """
     Capture a single frame from a livestream and
     return a random pixel's RGB value
@@ -36,27 +63,7 @@ def get_ran_px():
         None: if the capture failed
     """
 
-    for url in URLs:
-
-        # Extracts livestream URL and metadata without downloading
-        with yt_dlp.YoutubeDL(options) as ydl:
-            info = ydl.extract_info(url, download=False)
-            if info.get('is_live', False):
-                stream_url = info['url']
-                break
-    else:
-        print("Livestreams are offline")
-        return
-
-    # Capture Frame
-    capture_video = cv2.VideoCapture(stream_url)
-    ret, frame = capture_video.read()
-    capture_video.release()
-
-    if not ret:
-        print("Capture Frame Failed")
-        return
-
+    frame = get_single_frame()
     # Get a random pixel's RGB value
     h, w, px = frame.shape
     pixel_value = int(frame[np.random.randint(0, h), np.random.randint(0, w),
@@ -66,4 +73,4 @@ def get_ran_px():
 
 
 if __name__ == "__main__":
-    get_ran_px()
+    get_rand_px()
